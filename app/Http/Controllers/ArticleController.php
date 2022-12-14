@@ -21,15 +21,15 @@ class ArticleController extends Controller
         // QIITA_URLの値を取得してURLを定義
         $url = config('qiita.url') . '/api/v2/tags/' . $tag_id . '/items';
 
+        // Client(接続する為のクラス)を生成
+        $client = new Client();
+
         // optionsにトークンを指定
         $options = [
             'headers' => [
                 'Authorization' => 'Bearer' . config('qiita.token'),
             ],
         ];
-
-        // Client(接続する為のクラス)を生成
-        $client = new Client();
 
         // try catchでエラー時の処理を書く
         try {

@@ -1,4 +1,3 @@
-{{ dd($articles) }}
 @extends('layouts.main')
 
 @section('content')
