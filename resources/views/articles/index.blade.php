@@ -1,6 +1,13 @@
 @extends('layouts.main')
 
 @section('content')
+    @if (session('flash_message'))
+        <div class="flash_message">
+            <strong>
+                {{ session('flash_message') }}
+            </strong>
+        </div>
+    @endif
     <div class="article-contents">
         <aside class="aside-left">
             <nav id="left-nav">
@@ -26,10 +33,54 @@
                 <ul>
                     @foreach ($articles as $article)
                     <li class="aritcles">
+                        <div class="user-wrapper">
+                            <img src="{{ $article->user->profile_image_url }}" class="user-img">
+                            {{ $article->user->id }}さんが{{ \Carbon\Carbon::parse($article->created_at)->setTimezone('Asia/Tokyo')->format('Y年m月d日 H時i分s秒'); }}に投稿
+                        </div>
                         <p>
-                            {{ $article->title }}
+                            <a href="{{ route('articles.show', $article->id) }}">{{ $article->title }}</a>
+                        </p>
+                        <p>
+                            <i class="fas fa-tags"></i>
+                            @foreach ($article->tags as $article_tag)
+                                <span class="mgr">
+                                    {{ $article_tag->name }}
+                                    @if (next($article->tags))
+                                        @php echo ',' @endphp
+                                    @endif
+                                </span>
+                            @endforeach
+                        </p>
+                        <p>
+                            <i class="fas fa-thumbs-up"></i>
+                            <span class="mgr">LGTM {{ $article->likes_count }}</span>
                         </p>
                     </li>
+                    @endforeach
+                </ul>
+            @endif
+            @if (!empty($my_articles))
+                <ul>
+                    @foreach ($my_articles as $my_article)
+                        <li class="articles">
+                            <div class="user-wrapper">
+                                <img src="{{ $my_article->user->profile_image_url }}" class="user-imag" alt="">
+                                {{ $my_article->user->id }}さんが{{ \Carbon\Carbon::parse($my_article->created_at)->setTimezone('Asia/tokyo')->format('Y年m月d日 H時i分s秒'); }}に投稿
+                            </div>
+                            <p>
+                                <a href="{{ route('articles.edit', $my_article->id) }}">{{ $my_article->title }}</a>
+                            </p>
+                            <p>
+                                <i class="fas fa-tags"></i>
+                                @foreach ($my_article->tags as $my_article_tag)
+                                {{ $my_article_tag->name }};
+                                @endforeach
+                            </p>
+                            <p>
+                                <i class="fas fa-thumbs-up"></i>
+                                LGTM {{ $my_article->likes_count }}
+                            </p>
+                        </li>
                     @endforeach
                 </ul>
             @endif
